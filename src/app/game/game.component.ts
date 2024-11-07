@@ -9,5 +9,8 @@ import { Component } from '@angular/core';
   styleUrl: './game.component.scss'
 })
 export class GameComponent {
-
+  pickCardAnimation = false
+  takeCard(){
+    this.pickCardAnimation = true
+  }
 }
