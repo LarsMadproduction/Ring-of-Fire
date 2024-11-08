@@ -6,13 +6,12 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './start-screen.component.html',
-  styleUrl: './start-screen.component.scss'
+  styleUrl: './start-screen.component.scss',
 })
 export class StartScreenComponent {
-
-  constructor(private router: Router){}
-  newGame(){
+  constructor(private router: Router) {}
+  newGame() {
     // start Game
-    this.router.navigateByUrl('/game') 
-   }
+    this.router.navigateByUrl('/game');
+  }
 }
