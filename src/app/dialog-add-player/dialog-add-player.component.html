@@ -3,10 +3,10 @@
   <p>Add player name</p>
   <mat-form-field>
     <mat-label>Name</mat-label>
-     <input matInput  /> <!--[(ngModel)]="name" -->
+    <input matInput [(ngModel)]="name" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button >No Thanks</button> <!-- (click)="onNoClick()" -->
-  <button mat-button [mat-dialog-close]="" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="name" cdkFocusInitial>Ok</button>
 </mat-dialog-actions>
