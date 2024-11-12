@@ -17,11 +17,14 @@ import { Game } from '../../models/game';
 export class StartScreenComponent {
   constructor(private firestore: Firestore, private router: Router) {}
   newGame() {
-    let game = new Game();
-    addDoc(collection(this.firestore, 'games'), game.toJson()).then(
-      (gameInfo: any) => {
-        this.router.navigateByUrl('/game/' + gameInfo.id);
-      }
-    );
+    const game = new Game();
+    addDoc(collection(this.firestore, 'games'), game.toJson())
+      .then((docRef) => {
+        // docRef.id enthält die automatisch generierte ID des neuen Dokuments
+        this.router.navigateByUrl('/game/' + docRef.id);
+      })
+      .catch((error) => {
+        console.error('Fehler beim Erstellen eines neuen Spiels:', error);
+      });
   }
 }

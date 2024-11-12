@@ -1,20 +1,27 @@
-<div class="scrollY-container hide-mobile">
+<div *ngIf="!gameOver" class="scrollY-container hide-mobile">
   <app-player
+    (click)="editPlayer(i)"
     *ngFor="let player of game.players; let i = index"
     [ngStyle]="{ 'top.px': 100 + i * 90 }"
     [playerActive]="i == game.currentPlayer"
+    [image]="game.playerImages[i]"
     [name]="player"
   ></app-player>
 </div>
-<div class="scrollX-container hide-desktop">
+<div *ngIf="!gameOver" class="scrollX-container hide-desktop">
   <app-player-mobile
+    (click)="editPlayer(i)"
     *ngFor="let player of game.players; let i = index"
     [ngStyle]="{ 'left.px': 10 + i * 65, 'top.px': 0 }"
     [playerActive]="i == game.currentPlayer"
+    [image]="game.playerImages[i]"
     [name]="player"
   ></app-player-mobile>
 </div>
-<section>
+<div class="game-over" *ngIf="gameOver">
+  <img src="img/game-over.png" alt="">
+</div>
+<section *ngIf="!gameOver">
   <div>
     <img
       *ngFor="let c of [0, 1, 2, 3]; let i = index"
@@ -46,7 +53,7 @@
     />
   </div>
 </section>
-<app-game-info [card]="game.currentCard" class="pin-bottom"></app-game-info>
-<button mat-fab class="add-btn" (click)="openDialog()">
+<app-game-info *ngIf="!gameOver" [card]="game.currentCard" class="pin-bottom"></app-game-info>
+<button *ngIf="!gameOver" mat-fab class="add-btn" (click)="openDialog()">
   <mat-icon>add</mat-icon>
 </button>

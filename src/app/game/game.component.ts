@@ -15,7 +15,8 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
-import { PlayerMobileComponent } from "../player-mobile/player-mobile.component";
+import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 
 @Component({
   selector: 'app-game',
@@ -28,36 +29,41 @@ import { PlayerMobileComponent } from "../player-mobile/player-mobile.component"
     GameInfoComponent,
     GameInfoComponent,
     PlayerMobileComponent,
-    PlayerMobileComponent
-],
+    PlayerMobileComponent,
+  ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
 export class GameComponent implements OnInit {
   game: Game = new Game();
   firestore: Firestore = inject(Firestore);
-  gamesCollection = collection(this.firestore, 'games');
+  gameOver = false;
+  gameId: string = '';
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.newGame();
     this.route.params.subscribe((params) => {
-      console.log(params['id']);
-    });
-
-    onSnapshot(this.gamesCollection, (snapshot) => {
-      snapshot.docs.forEach((docSnapshot) => {
-        let gameData: any = docSnapshot.data();
-        let gameId: any = docSnapshot.id;
-        doc(this.gamesCollection, gameId);
-        this.game.players = gameData.players;
-        this.game.stack = gameData.stack;
-        this.game.playedCards = gameData.playedCards;
-        this.game.currentPlayer = gameData.currentPlayer;
-        this.game.pickCardAnimation = gameData.pickCardAnimation;
-        this.game.currentCard = gameData.currentCard;
-      });
+      this.gameId = params['id'];
+      if (this.gameId) {
+        const gameDocRef = doc(this.firestore, 'games', this.gameId);
+        onSnapshot(gameDocRef, (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const gameData: any = docSnapshot.data();
+            this.game.players = gameData.players;
+            this.game.playerImages = gameData.playerImages;
+            this.game.stack = gameData.stack;
+            this.game.playedCards = gameData.playedCards;
+            this.game.currentPlayer = gameData.currentPlayer;
+            this.game.pickCardAnimation = gameData.pickCardAnimation;
+            this.game.currentCard = gameData.currentCard;
+          } else {
+            console.error('Das Spiel-Dokument wurde nicht gefunden.');
+          }
+        });
+      } else {
+        console.error('Keine gültige Spiel-ID in der URL gefunden.');
+      }
     });
   }
 
@@ -66,7 +72,9 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.game.pickCardAnimation) {
+    if (this.game.stack.length == 0) {
+      this.gameOver = true;
+    } else if (!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop() || '';
       this.game.pickCardAnimation = true;
       this.game.currentPlayer++;
@@ -87,23 +95,40 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.playerImages.push('1.webp');
         this.saveGameData();
       }
     });
   }
 
   saveGameData() {
-    onSnapshot(this.gamesCollection, (snapshot) => {
-      snapshot.docs.forEach(async (docSnapshot) => {
-        let gameId: string = docSnapshot.id;
-        let gameDocRef = doc(this.firestore, 'games', gameId);
-        try {
-          await updateDoc(gameDocRef, this.game.toJson());
-          console.log(`Game data for ${gameId} updated successfully.`);
-        } catch (error) {
-          console.error('Error updating document: ', error);
+    if (this.gameId) {
+      const gameDocRef = doc(this.firestore, 'games', this.gameId);
+
+      updateDoc(gameDocRef, this.game.toJson())
+        .then(() => {
+          console.log(`Spielstand für ${this.gameId} erfolgreich gespeichert.`);
+        })
+        .catch((error) => {
+          console.error('Fehler beim Speichern des Dokuments: ', error);
+        });
+    } else {
+      console.error('Ungültige Spiel-ID, Speichern nicht möglich.');
+    }
+  }
+
+  editPlayer(playerId: number) {
+    let dialogRef = this.dialog.open(EditPlayerComponent);
+    dialogRef.afterClosed().subscribe((change: string) => {
+      if (change) {
+        if (change == 'DELETE') {
+          this.game.players.splice(playerId, 1);
+          this.game.playerImages.splice(playerId, 1);
+        } else {
+          this.game.playerImages[playerId] = change;
         }
-      });
+        this.saveGameData();
+      }
     });
   }
 }
