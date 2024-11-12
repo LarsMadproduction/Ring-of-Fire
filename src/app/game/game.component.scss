@@ -59,6 +59,10 @@ section {
   position: absolute;
   right: 32px;
   bottom: 32px;
+  @media (max-width: 720px) {
+
+    bottom: 170px;
+  }
 }
 
 .pin-bottom {

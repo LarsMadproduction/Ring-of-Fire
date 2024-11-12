@@ -7,9 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
+import { Router } from '@angular/router';
+
 import {
   Firestore,
-  collection,
   onSnapshot,
   doc,
   updateDoc,
@@ -40,7 +41,7 @@ export class GameComponent implements OnInit {
   gameOver = false;
   gameId: string = '';
 
-  constructor(private route: ActivatedRoute, public dialog: MatDialog) {}
+  constructor(private route: ActivatedRoute, public dialog: MatDialog, private router: Router) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -74,6 +75,9 @@ export class GameComponent implements OnInit {
   takeCard() {
     if (this.game.stack.length == 0) {
       this.gameOver = true;
+      setTimeout(() => {
+        this.router.navigateByUrl('/');
+      }, 3000);
     } else if (!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop() || '';
       this.game.pickCardAnimation = true;
