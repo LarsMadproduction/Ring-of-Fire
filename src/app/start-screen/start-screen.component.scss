@@ -6,6 +6,9 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1120px) {
+    overflow: hidden;
+  }
   img {
     height: 100vh;
   }
@@ -19,9 +22,11 @@ section {
     img {
       width: 40vw;
       height: auto;
-      
-      &:hover{
-        filter:brightness(1.2);
+      @media (max-width: 1120px) {
+        width: 400px;
+      }
+      &:hover {
+        filter: brightness(1.2);
         cursor: pointer;
       }
     }

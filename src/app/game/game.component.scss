@@ -49,22 +49,48 @@ section {
   }
 }
 
-.player-position{
-    position: absolute;
-    right: 0;
-    z-index: 1;
+.player-position {
+  position: absolute;
+  right: 0;
+  z-index: 1;
 }
 
-.add-btn{
+.add-btn {
   position: absolute;
   right: 32px;
   bottom: 32px;
 }
 
-.pin-bottom{
+.pin-bottom {
   position: absolute;
   bottom: 32px;
   left: 100px;
   right: 100px;
-  color: #FF9DB9;
+  color: #ff9db9;
+  @media (max-width: 720px) {
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.scrollY-container {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 80%;
+}
+
+.scrollX-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  app-player-mobile {
+    margin-left: 8px;
+  }
 }

@@ -1,7 +1,30 @@
-*{
-    margin: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  box-sizing: border-box;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media (max-width: 1020px) {
+  .hide-mobile {
+    display: none;
+  }
+  .scrollX-container{
+    display: flex;
+  }
+}
+
+@media (min-width: 1020px) {
+  .hide-desktop {
+    display: none;
+  }
+
+}

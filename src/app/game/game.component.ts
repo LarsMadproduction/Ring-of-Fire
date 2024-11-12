@@ -15,6 +15,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
+import { PlayerMobileComponent } from "../player-mobile/player-mobile.component";
 
 @Component({
   selector: 'app-game',
@@ -26,7 +27,9 @@ import { ActivatedRoute } from '@angular/router';
     MatIconModule,
     GameInfoComponent,
     GameInfoComponent,
-  ],
+    PlayerMobileComponent,
+    PlayerMobileComponent
+],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
